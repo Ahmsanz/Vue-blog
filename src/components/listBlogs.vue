@@ -1,7 +1,7 @@
 <template>
   <div id="show-blogs">
     <div class="posts-head">
-      <h1>All posts so far</h1>
+      <h1>List of posts titles</h1>
       <input v-model="search" type="text" placeholder="search..."/>
     </div>
     <div v-theme='"wide"' class="posts-collection">
@@ -9,7 +9,6 @@
     <div v-for="post in filteredPosts" class="posts-card">
       <div class="posts-content">
         <h4 v-rainbow>{{ post.title | to-uppercase}}</h4>
-        <article>{{post.body | snippet}}</article>
       </div>
     </div>
 
@@ -34,6 +33,7 @@ export default {
     .then(data => {console.log('posts ok', data.status); this.posts = data.body.slice(0, 8);});
   },
   mixins: [searchMixin]
+
 }
 </script>
 
