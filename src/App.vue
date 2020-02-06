@@ -12,6 +12,7 @@ import addBlog from './components/addBlog.vue'
 import showBlogs from './components/showBlogs.vue'
 import listBlogs from './components/listBlogs.vue'
 import header from './components/header.vue'
+import singleBlog from './components/singleBlog.vue'
 
 
 export default {
@@ -19,7 +20,8 @@ export default {
     'add-blog': addBlog,
     'show-blog': showBlogs,
     'list-blogs': listBlogs,
-    'app-header': header
+    'app-header': header,
+    'single-blog': singleBlog
   },
 
   data () {
