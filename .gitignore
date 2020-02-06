@@ -10,3 +10,9 @@ yarn-error.log
 *.ntvs*
 *.njsproj
 *.sln
+
+#Sensitive information
+
+/firebase.js
+./src/firebase.js
+/src/firebase.js

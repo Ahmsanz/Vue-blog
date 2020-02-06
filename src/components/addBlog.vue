@@ -21,7 +21,7 @@
         <option v-for="author in authors">{{author}}</option>
       </select>
 
-      <button v-on:click.prevent="post">Save</button>
+      <button v-on:click.prevent="addPost">Save</button>
     </form>
 
     <div v-if="submitted">
@@ -43,6 +43,8 @@
 
 
 <script>
+import { db } from '../firebase';
+import axios from 'axios';
 
 export default {
 
@@ -58,13 +60,24 @@ export default {
       submitted: false
     }
   },
+  firestore(){
+    return {
+        posts: db.collection('posts')
+    }
+  },
   methods: {
-    post: function(){
-      this.$http.post('http://jsonplaceholder.typicode.com/posts', {
-        userID: this.blog.author,
-        title: this.blog.title,
-        body: this.blog.content
-      }).then(data => {console.log(data); this.submitted = true;});
+    addPost: function(){
+      // this.$firestore.posts.add(this.blog);
+      axios.post('https://vue-blog-8a5d8.firebaseio.com/posts.json', this.blog)
+      .then(console.log('adding post to realtime database', this.blog)).catch(err => {if (err) throw err})
+      // console.log('adding new post', this.blog);
+      // this.$http.post('https://vue-blog-8a5d8.firebaseio.com/posts', {
+      //   title: this.title,
+      //   body: this.content,
+      //   categories: this.categories,
+      //   author: this.author
+      // }).then((data) => {console.log(data); this.submitted = true;}).catch(err=> console.log('nope',err))
+      // axios.post('https://vue-blog-8a5d8.firebaseio.com/posts', {headers: {'Content-Type': 'application/json' }, data: this.blog}, ).then( res => { console.log(res); this.submitted = true;});
     }
   }
 }

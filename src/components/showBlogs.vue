@@ -5,14 +5,14 @@
       <input v-model="search" type="text" placeholder="search..."/>
     </div>
     <div v-theme='"wide"' class="posts-collection">
-
-    <div v-for="post in filteredPosts" class="posts-card">
+    <router-link v-for="post in filteredPosts" v-bind:to="'/blog/' + post.id">
+    <div class="posts-card" key={{post.id}}>
       <div class="posts-content">
-        <h4 v-rainbow>{{ post.title | to-uppercase}}</h4>
-        <article>{{post.body | snippet}}</article>
+        <h4>{{ post.title | to-uppercase}}</h4>
+        <article>{{post.content | snippet}}</article>
       </div>
     </div>
-
+  </router-link>
     </div>
   </div>
 </template>
@@ -20,6 +20,10 @@
 
 <script>
 import searchMixin from '../mixins/searchMixin';
+
+import {db} from '../firebase.js';
+
+import axios from 'axios';
 
 export default {
 
@@ -29,9 +33,28 @@ export default {
       search: ""
     }
   },
+  firestore(){
+    return {
+      posts: db.collection('posts')
+    }
+  },
   created(){
-    this.$http.get('http://jsonplaceholder.typicode.com/posts')
-    .then(data => {console.log('posts ok', data.status); this.posts = data.body.slice(0, 8);});
+    
+    axios.get('https://vue-blog-8a5d8.firebaseio.com/posts.json')
+    .then( res => {console.log('posts coming', res.status); console.log(res.data); return res.data})
+    .then( data => {
+      let postsArray = [];
+      for (let key in data){
+        data[key].id = key;
+        postsArray.push(data[key]);
+      }
+      console.log(postsArray);
+      this.posts = postsArray;
+    })
+    .catch(err => {
+    console.log('Error getting documents', err);
+  });
+
   },
   mixins: [searchMixin]
 }
@@ -49,7 +72,7 @@ export default {
   .posts-card {
     display: flex;
     flex-direction: column;
-    width: 200px;
+    width: 500px;
     height: auto;
 
     margin: 20px 10px;
@@ -92,6 +115,7 @@ export default {
   }
   article {
     text-align: left;
+    color: dimgray;
   }
 
   h4 {
@@ -103,5 +127,9 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  a {
+    text-decoration: none;
   }
 </style>
